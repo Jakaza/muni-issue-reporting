@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:muni/screens/camera_screen.dart';
 import 'package:path/path.dart' as path;
 import 'package:uuid/uuid.dart';
 import '../main.dart';
@@ -33,6 +34,25 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
   void initState() {
     super.initState();
     _getCurrentLocation();
+  }
+
+  /// Take a photo using camera
+  Future<void> _takePhoto() async {
+    if (cameras.isEmpty) {
+      _showError('No cameras available');
+      return;
+    }
+
+    final result = await Navigator.push<String>(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CameraScreen(camera: cameras.first),
+      ),
+    );
+
+    if (result != null) {
+      setState(() => _imagePath = result);
+    }
   }
 
   /// Get current GPS location
