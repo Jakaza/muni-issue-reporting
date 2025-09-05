@@ -127,6 +127,9 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Text("Report Screen will be implemented"));
+    return Scaffold(
+      appBar: AppBar(title: const Text('Report Issue')),
+      body: Text("Jakaza"),
+    );
   }
 }
