@@ -1,16 +1,34 @@
-# muni
+#  Municipal Issue Reporter App
 
-A new Flutter project.
+A **Flutter mobile application** that empowers community members to report and track municipal service delivery issues such as **water leaks, potholes, streetlight failures, and waste problems**.  
+The goal is to create transparency, faster response times, and better collaboration between citizens and municipalities.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+##  Features
 
-A few resources to get you started if this is your first Flutter project:
+###  For Community Users
+-  **Report an issue** – take a photo or upload from gallery  
+-  **Categorize problems** – Water, Roads, Electrical, Waste, Public Safety, etc.  
+-  **Auto-detect location** or select manually on a map  
+-  **Add descriptions and priority levels** (low, medium, high, emergency)  
+-  **Track status** of submitted reports (submitted → in progress → resolved)  
+-  **Receive notifications** when status updates  
+-  **View community impact** (e.g., issues resolved this month)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+###  For Municipality/Admin (future scope)
+-  Dashboard to manage incoming reports  
+-  Assign crews and update progress  
+-  Map view of reported issues  
+-  Analytics on service delivery performance  
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
+
+##  Tech Stack
+- **Frontend:** Flutter (Dart)  
+- **Backend (planned):** Django / FastAPI / Node.js  
+- **Database (planned):** PostgreSQL or Firebase  
+- **Authentication:** Email/Password, possible integration with municipal accounts  
+- **Maps & Location:** Google Maps API / OpenStreetMap  
+
+---
