@@ -49,10 +49,56 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
         builder: (context) => CameraScreen(camera: cameras.first),
       ),
     );
-
     if (result != null) {
       setState(() => _imagePath = result);
     }
+  }
+
+  /// Submit the report
+  Future<void> _submitReport() async {
+    if (!_formKey.currentState!.validate()) return;
+    if (_imagePath == null) {
+      _showError('Please take a photo of the issue');
+      return;
+    }
+    if (_currentPosition == null) {
+      _showError('Location is required. Please enable GPS and try again.');
+      return;
+    }
+
+    setState(() => _isSubmitting = true);
+
+    try {
+      final report = IssueReport(
+        id: const Uuid().v4(),
+        title: _titleController.text,
+        description: _descriptionController.text,
+        category: _selectedCategory,
+        latitude: _currentPosition!.latitude,
+        longitude: _currentPosition!.longitude,
+        imagePath: _imagePath!,
+        createdAt: DateTime.now(),
+      );
+
+      final success = await ReportService.saveReport(report);
+
+      if (success) {
+        _showSuccess('Report submitted successfully!');
+        Navigator.pop(context);
+      } else {
+        _showError('Failed to submit report. Please try again.');
+      }
+    } catch (e) {
+      _showError('Error submitting report: $e');
+    } finally {
+      setState(() => _isSubmitting = false);
+    }
+  }
+
+  void _showSuccess(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: Colors.green),
+    );
   }
 
   /// Get current GPS location
