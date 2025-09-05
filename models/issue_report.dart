@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+
 enum IssueCategory {
   water,
   electricity,
@@ -89,6 +91,56 @@ class IssueReport {
         return 'Parks & Recreation';
       case IssueCategory.other:
         return 'Other';
+    }
+  }
+
+  // Get category icon
+  IconData get categoryIcon {
+    switch (category) {
+      case IssueCategory.water:
+        return Icons.water_drop;
+      case IssueCategory.electricity:
+        return Icons.electrical_services;
+      case IssueCategory.potholes:
+        return Icons.construction;
+      case IssueCategory.waste:
+        return Icons.delete;
+      case IssueCategory.streetlights:
+        return Icons.lightbulb;
+      case IssueCategory.publicSafety:
+        return Icons.security;
+      case IssueCategory.parks:
+        return Icons.park;
+      case IssueCategory.other:
+        return Icons.help_outline;
+    }
+  }
+
+  // Get status display name
+  String get statusDisplayName {
+    switch (status) {
+      case ReportStatus.submitted:
+        return 'Submitted';
+      case ReportStatus.inProgress:
+        return 'In Progress';
+      case ReportStatus.resolved:
+        return 'Resolved';
+      case ReportStatus.rejected:
+        return 'Rejected';
+    }
+  }
+
+  // Get status color
+  Color get statusColor {
+    switch (status) {
+      case ReportStatus.submitted:
+        return Colors.orange;
+      case ReportStatus.inProgress:
+        return Colors.blue;
+      case ReportStatus.resolved:
+        return Colors.green;
+      case ReportStatus.rejected:
+        return Colors.red;
     }
   }
 }
