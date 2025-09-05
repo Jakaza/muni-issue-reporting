@@ -36,6 +36,27 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
     _getCurrentLocation();
   }
 
+  String getDisplayName(IssueCategory category) {
+    switch (category) {
+      case IssueCategory.water:
+        return 'Water Issues';
+      case IssueCategory.electricity:
+        return 'Electrical Issues';
+      case IssueCategory.potholes:
+        return 'Road/Potholes';
+      case IssueCategory.waste:
+        return 'Waste Management';
+      case IssueCategory.streetlights:
+        return 'Street Lighting';
+      case IssueCategory.publicSafety:
+        return 'Public Safety';
+      case IssueCategory.parks:
+        return 'Parks & Recreation';
+      case IssueCategory.other:
+        return 'Other';
+    }
+  }
+
   /// Take a photo using camera
   Future<void> _takePhoto() async {
     if (cameras.isEmpty) {
@@ -101,6 +122,27 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
     );
   }
 
+  IconData getIcon(IssueCategory category) {
+    switch (category) {
+      case IssueCategory.water:
+        return Icons.water_drop;
+      case IssueCategory.electricity:
+        return Icons.electrical_services;
+      case IssueCategory.potholes:
+        return Icons.construction;
+      case IssueCategory.waste:
+        return Icons.delete;
+      case IssueCategory.streetlights:
+        return Icons.lightbulb;
+      case IssueCategory.publicSafety:
+        return Icons.security;
+      case IssueCategory.parks:
+        return Icons.park;
+      case IssueCategory.other:
+        return Icons.help_outline;
+    }
+  }
+
   /// Get current GPS location
   Future<void> _getCurrentLocation() async {
     setState(() => _isLoadingLocation = true);
@@ -129,7 +171,174 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Report Issue')),
-      body: Text("Jakaza"),
+      body: Form(
+        key: _formKey,
+        child: ListView(
+          children: [
+            // top
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Photo',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    if (_imagePath != null) ...[
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.file(
+                          File(_imagePath!),
+                          width: double.infinity,
+                          height: 200,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                    ],
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed: _takePhoto,
+                        icon: Icon(
+                          _imagePath == null
+                              ? Icons.camera_alt
+                              : Icons.camera_alt_outlined,
+                        ),
+                        label: Text(
+                          _imagePath == null ? 'Take Photo' : 'Retake Photo',
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            // Location section
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Location',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    if (_isLoadingLocation)
+                      const Row(
+                        children: [
+                          SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          ),
+                          SizedBox(width: 8),
+                          Text('Getting location...'),
+                        ],
+                      )
+                    else if (_currentPosition != null)
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Latitude: ${_currentPosition!.latitude.toStringAsFixed(6)}',
+                          ),
+                          Text(
+                            'Longitude: ${_currentPosition!.longitude.toStringAsFixed(6)}',
+                          ),
+                        ],
+                      )
+                    else
+                      const Text(
+                        'Location not available',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    const SizedBox(height: 8),
+                    SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
+                        onPressed: _getCurrentLocation,
+                        icon: const Icon(Icons.refresh),
+                        label: const Text('Refresh Location'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            // Category selection
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Category',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    DropdownButtonFormField<IssueCategory>(
+                      value: _selectedCategory,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
+                      ),
+                      items:
+                          IssueCategory.values.map((category) {
+                            return DropdownMenuItem(
+                              value: category,
+                              child: Row(
+                                children: [
+                                  Icon(getIcon(category)),
+                                  const SizedBox(width: 8),
+                                  Text(getDisplayName(category)),
+                                ],
+                              ),
+                            );
+                          }).toList(),
+                      onChanged: (value) {
+                        if (value != null) {
+                          setState(() => _selectedCategory = value);
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            // center
+
+            // bottom
+          ],
+        ),
+      ),
     );
   }
 }
